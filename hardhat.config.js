@@ -42,6 +42,11 @@ module.exports = {
       chainId: 80001,
       blockConfirmations: 6,
     },
+    localzama: {
+      accounts: ["0xa5e1defb98EFe38EBb2D958CEe052410247F4c80"],
+      chainid: "8009",
+      url: "http://127.0.0.1:8545",
+    },
     localfhenix: {
       // pubkey1 : 0x0319069ca5e383e40d6d19fb3e76e8b22b91cf4b0df661850c8e1de01624ab1d10
       accounts: ["0x6ce6cbc11dea3db360b9c6e9ae229e2c17ef9104fecedb552f0e4e7da6b80af0"],
