@@ -1,6 +1,6 @@
 const { ethers, network } = require("hardhat");
 const { createInstance } = require("fhevmjs");
-const { getInstance, provider } = require("./Instantiation.js");
+const { getInstance, provider } = require("./InstantiationZama");
 
 const signer = new ethers.Wallet(process.env.Private_Key,provider);
 
@@ -45,11 +45,11 @@ async function interaction() {
    
     console.log(`the token initalized is ${token}`);
 
-    await MockBTC.connect(signer).approve("0xcae3547ae1aCDEE7c531E280AB9193D219FCAd49",parseInt(1000));
+    await MockBTC.connect(signer).approve("0xcae3547ae1aCDEE7c531E280AB9193D219FCAd49",parseInt("1000",10));
 
     console.log("BTC Mock approved!!");
 
-    await MockETH.connect(signer).approve("0xcae3547ae1aCDEE7c531E280AB9193D219FCAd49",parseInt(1000));
+    await MockETH.connect(signer).approve("0xcae3547ae1aCDEE7c531E280AB9193D219FCAd49",parseInt("1000",10));
 
     console.log("ETH Mock approved!!");
 

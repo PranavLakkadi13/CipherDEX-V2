@@ -14,6 +14,7 @@ const PolygonScan_API_KEY = process.env.PolygonScan_API_KEY;
 const Etherscan_API_KEY = process.env.Etherscan_API_KEY;
 const Coinmarketcap_API_KEY = process.env.Coinmarketcap_API_KEY;
 const RPC_URL_Alchemy_MAINNET = process.env.RPC_URL_Alchemy_MAINNET;
+const ZAMAMNEMONIC = process.env.ZAMAMNEMONIC;
 
 const Private_Key_G = process.env.Private_Key_G;
 const RPC_URL_G = process.env.RPC_URL_G;
@@ -43,8 +44,10 @@ module.exports = {
       blockConfirmations: 6,
     },
     localzama: {
-      accounts: ["0xa5e1defb98EFe38EBb2D958CEe052410247F4c80"],
-      chainid: "8009",
+      // pubkey1 : 0x4281d1Ef85F13747761Ea76961b3ACA13C7A8957
+      // accounts: ["0x6ce6cbc11dea3db360b9c6e9ae229e2c17ef9104fecedb552f0e4e7da6b80af0"],
+      accounts:{ mnemonic : ZAMAMNEMONIC},
+      chainid: 9000,
       url: "http://127.0.0.1:8545",
     },
     localfhenix: {
