@@ -44,9 +44,9 @@ module.exports = {
       blockConfirmations: 6,
     },
     localzama: {
-      // pubkey1 : 0x4281d1Ef85F13747761Ea76961b3ACA13C7A8957
-      // accounts: ["0x6ce6cbc11dea3db360b9c6e9ae229e2c17ef9104fecedb552f0e4e7da6b80af0"],
-      accounts:{ mnemonic : ZAMAMNEMONIC},
+      // pubkey2 : 0x1D6B3f840358d958C8db24717C3edB914616E871
+      // pubKey1 : 0x3Dfb5243204b57be446726C1Fc0C8b00006E783C
+      accounts:["0x0fbfd3e2852fabd88c2be1ccc17aca9ed2758cf1c62182c52f2325ad08aae7d7"],
       // accounts: { ZAMAMNEMONIC },
       chainid: 9000,
       url: "http://127.0.0.1:8545",
