@@ -3,7 +3,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 async function mnemonicToAddress() {
-    let words = process.env.ZAMAMNEMONIC;
+    let words = process.env.MNEMONIC;
 
     // const mnemonic = ethers.Mnemonic.fromPhrase(words);
     // if (!mnemonic) {

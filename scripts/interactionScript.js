@@ -14,6 +14,7 @@ async function interaction() {
     const Factory = await ethers.getContractAt("FactoryFHE","0x09c96F06493A472e0E658fCf34b14C6f0681BC2c",signer);
 
     const fhevm = await getInstance();
+    console.log("The connect val: ", fhevm)
 
     const accounts = await ethers.getSigners();
 
@@ -45,19 +46,26 @@ async function interaction() {
    
     console.log(`the token initalized is ${token}`);
 
-    await MockBTC.connect(signer).approve("0xcae3547ae1aCDEE7c531E280AB9193D219FCAd49",parseInt("1000",10));
+    await MockBTC.connect(signer).approve(pair,10000);
 
     console.log("BTC Mock approved!!");
 
-    await MockETH.connect(signer).approve("0xcae3547ae1aCDEE7c531E280AB9193D219FCAd49",parseInt("1000",10));
+    await MockETH.connect(signer).approve(pair,10000);
 
     console.log("ETH Mock approved!!");
 
-    const encryptedValue = await fhevm.encrypt32(parseInt(1000));
+    const approveedBTCValue = await MockBTC.allowance(accounts[0].address,pair);
+    console.log("The value approved in BTC is " + approveedBTCValue.toString());
+
+    const approveedETHValue = await MockETH.allowance(accounts[0].address,pair);
+    console.log("The value approved in ETH is " + approveedETHValue.toString());
+
+
+    const encryptedValue = fhevm.encrypt32(1000);
 
     console.log("The value has been encrypted!!");
 
-    const x1 = await CPAMM.connect(signer).addLiquidity(encryptedValue,encryptedValue);
+    const x1 = await CPAMM.connect(signer).addLiquidity(fhevm.encrypt32(1000),fhevm.encrypt32(1000));
     await x1.wait(2); 
 
     const supplyafterLiquidityAdded = await CPAMM.totalSupply();

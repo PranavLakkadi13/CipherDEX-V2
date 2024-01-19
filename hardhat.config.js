@@ -47,6 +47,7 @@ module.exports = {
       // pubkey1 : 0x4281d1Ef85F13747761Ea76961b3ACA13C7A8957
       // accounts: ["0x6ce6cbc11dea3db360b9c6e9ae229e2c17ef9104fecedb552f0e4e7da6b80af0"],
       accounts:{ mnemonic : ZAMAMNEMONIC},
+      // accounts: { ZAMAMNEMONIC },
       chainid: 9000,
       url: "http://127.0.0.1:8545",
     },
