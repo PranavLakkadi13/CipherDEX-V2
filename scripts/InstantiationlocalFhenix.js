@@ -11,9 +11,9 @@ chainID = 8011;
 const getInstance = async () => {
     if (instance) return instance;
 
-    // const network = new ethers.providers.getNetwork();
+    const network =  await provider.getNetwork();
 
-    let fhePublicKey = await ethers.provider.call({ to: "0x0000000000000000000000000000000000000044" });
+    let fhePublicKey = await provider.call({ to: "0x0000000000000000000000000000000000000044" });
     // const fhePublicKey = await provider.call({
     //     // fhe lib address, may need to be changed depending on network
     //     to: "0x000000000000000000000000000000000000005d",
@@ -22,7 +22,7 @@ const getInstance = async () => {
     //   });
 
     instance = await createInstance({
-        chainId: 8011,
+        chainId: chainID,
         publicKey: fhePublicKey,
       });
 
