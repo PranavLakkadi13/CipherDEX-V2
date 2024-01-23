@@ -14,7 +14,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log: true,
     });
 
-    log(`The address of the dpeloyed contract ${MockETH.address}`);
+    log(`The address of the deployed contract ${MockETH.address}`);
     log("------------------------------------------------------------------------");
 
 }

@@ -14,7 +14,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
         log: true,
     });
 
-    log(`The address of the dpeloyed contract ${Pair.address}`);
+    log(`The address of the deployed contract ${Pair.address}`);
     log("------------------------------------------------------------------------");
 
 }

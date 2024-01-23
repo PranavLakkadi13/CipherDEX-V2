@@ -59,8 +59,8 @@ module.exports = {
       url: "http://localhost:8545",
     },
     fhenix: {
-      url: "https://fhenode.fhenix.io/new/evm",
-      chainId: 5432,
+      url: "https://test01.fhenix.zone/evm",
+      chainId: 412346,
       accounts: [Private_Key]
     },
     zama: {
