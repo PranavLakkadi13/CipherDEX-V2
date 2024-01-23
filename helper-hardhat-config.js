@@ -1,5 +1,6 @@
 const DEVNET_URL = "https://fhenode.fhenix.io/new/evm";
 const zama_devnet = "https://devnet.zama.ai";
+const FhenixTestnet = "https://test01.fhenix.zone/evm";
 
 const localFhenix = "docker run -it -p 8545:8545 -p 6000:6000 \
 --name localfhenix ghcr.io/fhenixprotocol/fhenix-devnet:0.1.6"
@@ -8,5 +9,6 @@ const localzama = "docker run -i -p 8545:8545 -p 8546:8546 --rm --name fhevm ghc
 
 module.exports = {
     DEVNET_URL,
-    zama_devnet
+    zama_devnet,
+    FhenixTestnet
 }
