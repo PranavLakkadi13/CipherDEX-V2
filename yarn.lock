@@ -558,6 +558,13 @@
   resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-2.1.0.tgz#0709e9f4cb252351c609c6e6d8d6779a8d25edff"
   integrity sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==
 
+"@fhenixprotocol/contracts@^0.1.0-beta.2":
+  version "0.1.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@fhenixprotocol/contracts/-/contracts-0.1.0-beta.2.tgz#6f45b783773ba2df63658969d1fd82357c0e792c"
+  integrity sha512-ZTYvJV1JedQjeNfWp5e80Rk9ShKrPqfmVzequYpCMEG7F/vT2o7dtcKHH4IVil92YnA/J2r35pJ/4clV7ufE2Q==
+  dependencies:
+    "@openzeppelin/contracts" "^5.0.0"
+
 "@ganache/ethereum-address@0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@ganache/ethereum-address/-/ethereum-address-0.1.4.tgz#0e6d66f4a24f64bf687cb3ff7358fb85b9d9005e"
@@ -951,6 +958,11 @@
   version "4.9.5"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.9.5.tgz#1eed23d4844c861a1835b5d33507c1017fa98de8"
   integrity sha512-ZK+W5mVhRppff9BE6YdR8CC52C8zAvsVAiWhEtQ5+oNxFE6h1WdeWo+FJSF8KKvtxxVYZ7MTP/5KoVpAU3aSWg==
+
+"@openzeppelin/contracts@^5.0.0":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-5.0.1.tgz#93da90fc209a0a4ff09c1deb037fbb35e4020890"
+  integrity sha512-yQJaT5HDp9hYOOp4jTYxMsR02gdFZFXhewX5HW9Jo4fsqSVqqyIO/xTHdWDaKX5a3pv1txmf076Lziz+sO7L1w==
 
 "@resolver-engine/core@^0.3.3":
   version "0.3.3"
@@ -2495,7 +2507,7 @@ ethers@^5.7.0, ethers@^5.7.1, ethers@^5.7.2:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-ethers@^6.6.4:
+ethers@^6.6.4, ethers@^6.9.1:
   version "6.10.0"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.10.0.tgz#20f3c63c60d59a993f8090ad423d8a3854b3b1cd"
   integrity sha512-nMNwYHzs6V1FR3Y4cdfxSQmNgZsRj1RiTU25JwvnJLmyzw9z3SKxNc2XKDuiXXo/v9ds5Mp9m6HBabgYQQ26tA==
@@ -2584,6 +2596,17 @@ fastq@^1.6.0:
   integrity sha512-ifCoaXsDrsdkWTtiNJX5uzHDsrck5TzfKKDcuFFTIrrc/BS076qgEIfoIy1VeZqViznfKiysPYTh/QeHtnIsYA==
   dependencies:
     reusify "^1.0.4"
+
+fhenixjs@^0.1.0-beta.2:
+  version "0.1.0-beta.2"
+  resolved "https://registry.yarnpkg.com/fhenixjs/-/fhenixjs-0.1.0-beta.2.tgz#92500715a334c2296d5bf613329af3b473788073"
+  integrity sha512-mHTNijKARjIse/dYgzWkfjpbBUwk3CS9m2sXl68lluyfaqUXzeOSzHXfYPxt8VVNhwP9bm7R5GdUYbxMI+Otwg==
+  dependencies:
+    ethers "^6.9.1"
+    node-tfhe "^0.3.1"
+    tfhe "^0.3.1"
+    tweetnacl "^1.0.3"
+    tweetnacl-util "^0.15.1"
 
 fhevm@^0.1.5:
   version "0.1.13"
@@ -3964,7 +3987,7 @@ node-gyp-build@^4.2.0, node-gyp-build@^4.3.0:
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.8.0.tgz#3fee9c1731df4581a3f9ead74664369ff00d26dd"
   integrity sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==
 
-node-tfhe@^0.3.0-beta.0:
+node-tfhe@^0.3.0-beta.0, node-tfhe@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/node-tfhe/-/node-tfhe-0.3.1.tgz#d96c8a6cc4fc3e1f1f74b24d15cb200ca4760aa5"
   integrity sha512-re5tBgPMwoSWl6b/pL13MWKnsBUv9nldAXoWkokG1aiUm9P0aOjJoz0J9+zOwV/dB0i9xN/TI//mnqF3uWAOIg==
@@ -4875,7 +4898,7 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
-tfhe@^0.3.0-beta.0:
+tfhe@^0.3.0-beta.0, tfhe@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/tfhe/-/tfhe-0.3.1.tgz#44f6a6247ff66235808c8bcd7552fb1c4670a955"
   integrity sha512-PqnsUVChETviwd5ebfJoj9yueUxIKPaSsfSGVmgvpUsUqAlianAx+4UH9hEmjDxgshSRDgm1Fp0/rRgCx2BYog==
