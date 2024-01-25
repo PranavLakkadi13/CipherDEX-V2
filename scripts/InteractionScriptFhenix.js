@@ -3,7 +3,7 @@ const { JsonRpcProvider } = require("ethers");
 const { ethers } = require("hardhat");
 const { FhenixTestnet } = require("../helper-hardhat-config");
 
-const provider = new ethers.providers.Web3Provider(FhenixTestnet);
+const provider = new ethers.providers.JsonRpcProvider(FhenixTestnet);
 
 // initialize Fhenix Client
 const instance = new FhenixClient({provider});
