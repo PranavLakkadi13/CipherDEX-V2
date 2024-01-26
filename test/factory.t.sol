@@ -4,8 +4,9 @@ pragma solidity ^0.8.19;
 import {MockETH} from  "../src/test/MockETH.sol";
 import {MockBTC} from "../src/test/MockBTC.sol";
 import {FactoryFHE} from  "../src/Factory.sol";
+import {Test} from "forge-std/Test.sol";
 
-contract testFactory {
+contract testFactory is Test {
 
     FactoryFHE public factory;
     MockBTC public btc;
@@ -25,5 +26,6 @@ contract testFactory {
     function testCreatePair() public {
         address x = factory.createPair(address(btc),address(eth));
         assertEq(x, factory.getPair(address(eth),address(btc)));
+        assertEq(factory.allPairsLength(),1);
     }
 }
