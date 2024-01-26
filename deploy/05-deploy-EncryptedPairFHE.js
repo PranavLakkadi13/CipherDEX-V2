@@ -8,7 +8,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
 
     args = [];
 
-    const Pair = await deploy("PairFHE", {
+    const Pair = await deploy("Pair", {
         args: args,
         from: deployer,
         log: true,
@@ -19,4 +19,4 @@ module.exports = async ({getNamedAccounts, deployments}) => {
 
 }
 
-module.exports.tags = ["all", "PairFHE"];
+module.exports.tags = ["all", "Pair"];

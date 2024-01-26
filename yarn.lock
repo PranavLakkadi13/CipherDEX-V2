@@ -558,10 +558,10 @@
   resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-2.1.0.tgz#0709e9f4cb252351c609c6e6d8d6779a8d25edff"
   integrity sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==
 
-"@fhenixprotocol/contracts@^0.1.0-beta.2":
-  version "0.1.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@fhenixprotocol/contracts/-/contracts-0.1.0-beta.2.tgz#6f45b783773ba2df63658969d1fd82357c0e792c"
-  integrity sha512-ZTYvJV1JedQjeNfWp5e80Rk9ShKrPqfmVzequYpCMEG7F/vT2o7dtcKHH4IVil92YnA/J2r35pJ/4clV7ufE2Q==
+"@fhenixprotocol/contracts@^0.1.0-beta.3":
+  version "0.1.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@fhenixprotocol/contracts/-/contracts-0.1.0-beta.3.tgz#5ede4489a3019a539727ef1e95582c743af8a99c"
+  integrity sha512-d7gFgTPX++VfMs450CM1gR0tCRhs7FyWU1tgf3i+wJWwLmtjMM+6pKM67+xHoRbMq7TuGRzAEZEurk3rpIfkJg==
   dependencies:
     "@openzeppelin/contracts" "^5.0.0"
 

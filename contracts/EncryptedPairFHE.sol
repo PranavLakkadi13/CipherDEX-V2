@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "@fhenixprotocol/contracts/FHE.sol";
 import "./interfaces/IERC20.sol";
 
-contract PairFHE {
+contract Pair {
 
     IERC20 public token0;
     IERC20 public token1;

@@ -5,7 +5,7 @@ import "fhevm/abstracts/EIP712WithModifier.sol";
 import "fhevm/lib/TFHE.sol";
 import "./interfaces/IERC20.sol";
 
-contract Pair is EIP712WithModifier {
+contract PairZAMA is EIP712WithModifier {
     IERC20 public token0;
     IERC20 public token1;
     address public immutable factory;
