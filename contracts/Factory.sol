@@ -11,7 +11,6 @@ contract FactoryFHE {
 
     address[] public allPairs;
 
-
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
     function allPairsLength() external view returns (uint) {
@@ -22,6 +21,7 @@ contract FactoryFHE {
         console.log("done");
         require(tokenA != tokenB, 'IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
+        console.log("The address of token0 ", token0);
         require(token0 != address(0), 'ZERO_ADDRESS');
         require(getPair[token0][token1] == address(0), 'UniswapV2: PAIR_EXISTS'); // single check is sufficient
         bytes memory bytecode = type(Pair).creationCode;
@@ -29,7 +29,7 @@ contract FactoryFHE {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        console.log("done ", pair);
+        console.log("The address of ", pair);
         Pair(pair).initialize(token0, token1);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
