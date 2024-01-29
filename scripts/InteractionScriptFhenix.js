@@ -28,47 +28,48 @@ async function interactionFhenix() {
 
     console.log("The Balance of ETH before mint " + beforeMint_hashETH);
     
-    await Factory.connect(accounts[0]).createPair(MockBTC.address,MockETH.address); 
+    // await Factory.connect(accounts[0]).createPair(MockBTC.address,MockETH.address); 
 
-    const pair = await Factory.getPair(MockETH.address,MockBTC.address);
+    const pair = "0xAB744E7F5B7B66102e8E0b093684D2d4651A95EC";
 
     console.log(`The pair address that is created ${pair}`);
 
-    // const CPAMM = await ethers.getContractAt("Pair",pair,signer);
+    const CPAMM = await ethers.getContractAt("Pair","0xAB744E7F5B7B66102e8E0b093684D2d4651A95EC",signer);
     
-    // const x = await CPAMM.totalSupply();
-   
-    // console.log("The initial supply ", x.toString());
-   
-    // const token = await CPAMM.token0();
-   
-    // console.log(`the token initalized is ${token}`);
-
-    // await MockBTC.connect(accounts[0]).approve(pair,10000);
-
-    // console.log("BTC Mock approved!!");
-
-    // await MockETH.connect(accounts[0]).approve(pair,10000);
-
-    // console.log("ETH Mock approved!!");
-
+    CPAMM.initialize(MockBTC.address,MockETH.address);
     
-    // const approveedBTCValue = await MockBTC.allowance(accounts[0].address,pair);
-    // console.log("The value approved in BTC is " + approveedBTCValue.toString());
+    const x = await CPAMM.totalSupply();
+   
+    console.log("The initial supply ", x.toString());
+   
+    const token = await CPAMM.token0();
+   
+    console.log(`the token initalized is ${token}`);
 
-    // const approveedETHValue = await MockETH.allowance(accounts[0].address,pair);
-    // console.log("The value approved in ETH is " + approveedETHValue.toString());
+    await MockBTC.connect(accounts[0]).approve(pair,10000);
 
-    // const resultUint32 = await instance.encrypt_uint32(5000);
+    console.log("BTC Mock approved!!");
 
-    // console.log("The value has been encrypted!!");
+    await MockETH.connect(accounts[0]).approve(pair,10000);
 
-    // const x1 = await CPAMM.connect(accounts[0]).addLiquidity(resultUint32,resultUint32);
-    // // await x1.wait(2); 
+    console.log("ETH Mock approved!!");
+    
+    const approveedBTCValue = await MockBTC.allowance(accounts[0].address,pair);
+    console.log("The value approved in BTC is " + approveedBTCValue.toString());
 
-    // const supplyafterLiquidityAdded = await CPAMM.totalSupply();
+    const approveedETHValue = await MockETH.allowance(accounts[0].address,pair);
+    console.log("The value approved in ETH is " + approveedETHValue.toString());
 
-    // console.log("The after liquidity supply is ", supplyafterLiquidityAdded.toString());
+    const resultUint32 = await instance.encrypt_uint32(5000);
+
+    console.log("The value has been encrypted!!");
+
+    await CPAMM.addLiquidity(resultUint32,resultUint32);
+    // await x1.wait(2); 
+
+    const supplyafterLiquidityAdded = await CPAMM.totalSupply();
+
+    console.log("The after liquidity supply is ", supplyafterLiquidityAdded.toString());
 }
 
 
