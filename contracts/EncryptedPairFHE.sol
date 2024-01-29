@@ -8,7 +8,7 @@ contract Pair {
 
     IERC20 public token0;
     IERC20 public token1;
-    address public immutable factory;
+    address public  factory;
 
     uint public reserve0;
     uint public reserve1;
@@ -21,7 +21,7 @@ contract Pair {
     }
 
     function initialize(address _token0, address _token1) external {
-        require(msg.sender == factory, 'FORBIDDEN'); // sufficient check
+        require(msg.sender == factory, 'Only Factory can call this'); // sufficient check
         token0 = IERC20(_token0);
         token1 = IERC20(_token1);
     }
@@ -78,11 +78,12 @@ contract Pair {
         uint32 amount0 = FHE.decrypt(x);
         uint32 amount1 = FHE.decrypt(y);
         
-        token0.transferFrom(msg.sender, address(this), uint256(amount0));
-        token1.transferFrom(msg.sender, address(this), uint256(amount1));
+        bool t = token0.transferFrom(msg.sender, address(this), uint256(amount0));
+        bool tt = token1.transferFrom(msg.sender, address(this), uint256(amount1));
+        require(t && tt);
 
         if (reserve0 > 0 || reserve1 > 0) {
-            require(reserve0 * uint(amount1) == reserve1 * uint(amount0), "x / y != dx / dy");
+            require(reserve0 * uint256(amount1) == reserve1 * uint256(amount0), "x / y != dx / dy");
         }
 
         if (totalSupply == 0) {

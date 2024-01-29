@@ -1,23 +1,18 @@
-const { FhenixClient,getPermit,Permission } = require("fhenixjs");
+const { FhenixClient } = require("fhenixjs");
 const { ethers } = require("hardhat");
 
 let instance;
 let permission;
 
-async function Instance() {
+async function Instance(contractAddress) {
 
   const provider = ethers.provider;
-  instance = new FhenixClient(provider);
-
-
-  // return Promise.all([instance]).then(([instance]) => ({ instance}));
+  instance = new FhenixClient({provider});
+  
+  console.log("The Instance has been created");
   return instance;
 }
 
-Instance()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-});
-
+module.exports = {
+  Instance
+}

@@ -1,23 +1,20 @@
-const { EncryptionTypes, FhenixClient, EncryptedUint8 } = require("fhenixjs");
-const { JsonRpcProvider } = require("ethers");
+const { EncryptionTypes, FhenixClient, EncryptedUint8,getPermit,permission } = require("fhenixjs");
+const { Instance} = require("./FhenixInstance");
 const { ethers } = require("hardhat");
 const { FhenixTestnet } = require("../helper-hardhat-config");
 
 const provider =  ethers.provider;
-
-// initialize Fhenix Client
-const instance = new FhenixClient({provider});
-
-// const inst = instance.Create({provider});
+let CPAMMInstance;
 
 async function interactionFhenix() {
 
     const accounts = await ethers.getSigners();
     const signer = accounts[0];
 
-    const MockBTC =  await ethers.getContractAt("MockBTC","0x2e1771fcEFFA28Fd49910AC8aAc647f01A86b58A",signer);
-    const MockETH =  await ethers.getContractAt("MockETH","0x6B1b2bed91137659E08e56d6CbC11DbF9e18bDaB",signer);
-    const Factory = await ethers.getContractAt("FactoryFHE","0x0c882c2718B439A9c9931203DDf46760527c150D",signer);
+    const MockBTC =  await ethers.getContractAt("MockBTC","0x369B5466d3797f808b7b5C033d5175CdBcD8E9F0",signer);
+    const MockETH =  await ethers.getContractAt("MockETH","0x9f7c110794c259088Eaa22B608b508f968E0c6b7",signer);
+    const Factory =  await ethers.getContractAt("FactoryFHE","0xA8F1F3Cab3286F8BfD9223E0081E80e2c2375993",signer);
+    const MockFHE =  await ethers.getContractAt("MockFHE","0x28b2665b61168A6F16F458C2F014c9a16b7c46A0",signer);
 
     const beforeMint_hashBTC = await MockBTC.connect(accounts[0]).balanceOf(accounts[0].address);
 
@@ -28,15 +25,22 @@ async function interactionFhenix() {
 
     console.log("The Balance of ETH before mint " + beforeMint_hashETH);
     
-    // await Factory.connect(accounts[0]).createPair(MockBTC.address,MockETH.address); 
+    // await Factory.createPair(MockETH.address,MockBTC.address); 
 
-    const pair = "0xAB744E7F5B7B66102e8E0b093684D2d4651A95EC";
+    // const pair = await Factory.getPair(MockETH.address,MockFHE.address);
+    const pair = "0x5754Eb3B9EEe2f6af56fEE3604aFAe1d674ABdBE"
 
     console.log(`The pair address that is created ${pair}`);
 
-    const CPAMM = await ethers.getContractAt("Pair","0xAB744E7F5B7B66102e8E0b093684D2d4651A95EC",signer);
+    CPAMMInstance = await Instance(pair);
+
+    // const permit = await getPermit(contractAddress, provider);
+    // CPAMMInstance.storePermit(permit);
+    // const permission = CPAMMInstance.extractPermitPermission(permit);
+
+    const CPAMM = await ethers.getContractAt("Pair",pair,signer);
     
-    CPAMM.initialize(MockBTC.address,MockETH.address);
+    // CPAMM.initialize(MockBTC.address,MockETH.address);
     
     const x = await CPAMM.totalSupply();
    
@@ -60,11 +64,11 @@ async function interactionFhenix() {
     const approveedETHValue = await MockETH.allowance(accounts[0].address,pair);
     console.log("The value approved in ETH is " + approveedETHValue.toString());
 
-    const resultUint32 = await instance.encrypt_uint32(5000);
+    const resultUint32 = await CPAMMInstance.encrypt_uint32(5000);
 
     console.log("The value has been encrypted!!");
 
-    await CPAMM.addLiquidity(resultUint32,resultUint32);
+    await CPAMM.connect(accounts[0]).addLiquidity(resultUint32,resultUint32);
     // await x1.wait(2); 
 
     const supplyafterLiquidityAdded = await CPAMM.totalSupply();
