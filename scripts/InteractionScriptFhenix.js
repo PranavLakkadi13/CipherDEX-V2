@@ -28,7 +28,7 @@ async function interactionFhenix() {
     // await Factory.createPair(MockETH.address,MockBTC.address); 
 
     // const pair = await Factory.getPair(MockETH.address,MockFHE.address);
-    const pair = "0xFBA8B065A4BedB6169681C8B27B4238CFaB9e6ED"
+    const pair = "0x367F796a70AA24Cb284A0469c2f2EC0F1680fE0a"
 
     console.log(`The pair address that is created ${pair}`);
 
