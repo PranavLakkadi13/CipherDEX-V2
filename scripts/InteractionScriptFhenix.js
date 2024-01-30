@@ -28,7 +28,7 @@ async function interactionFhenix() {
     // await Factory.createPair(MockETH.address,MockBTC.address); 
 
     // const pair = await Factory.getPair(MockETH.address,MockFHE.address);
-    const pair = "0x367F796a70AA24Cb284A0469c2f2EC0F1680fE0a"
+    const pair = "0xa7423469945955403F82232c41e6665DA3cCa8Ee"
 
     console.log(`The pair address that is created ${pair}`);
 
@@ -38,7 +38,7 @@ async function interactionFhenix() {
     // CPAMMInstance.storePermit(permit);
     // const permission = CPAMMInstance.extractPermitPermission(permit);
 
-    const CPAMM = await ethers.getContractAt("CPAMM",pair,signer);
+    const CPAMM = await ethers.getContractAt("COnstantProduct",pair,signer);
     
     // CPAMM.initialize(MockBTC.address,MockETH.address);
     

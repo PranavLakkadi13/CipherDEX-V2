@@ -4,7 +4,7 @@ const { ethers } = require("hardhat");
 let instance;
 let permission;
 
-async function Instance(contractAddress) {
+async function Instance() {
 
   const provider = ethers.provider;
   instance = new FhenixClient({provider});
