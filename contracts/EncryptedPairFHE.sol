@@ -10,11 +10,11 @@ contract Pair {
     IERC20 public token1;
     address public  factory;
 
-    uint public reserve0;
-    uint public reserve1;
+    uint256 public reserve0;
+    uint256 public reserve1;
 
     uint public totalSupply;
-    mapping(address => uint) public balanceOf;
+    mapping(address => uint256) public balanceOf;
 
     constructor() {
         factory = msg.sender;
@@ -46,23 +46,25 @@ contract Pair {
         // uint32 amountIn = TFHE.decrypt(x);
         euint32 x = FHE.asEuint32(_amountIn);
         uint256 amountIn = FHE.decrypt(x);
+        
         require(
             _tokenIn == address(token0) || _tokenIn == address(token1),
             "invalid token"
         );
-        require(uint256(amountIn) > 0, "amount in = 0");
+
+        require(amountIn > 0, "amount in = 0");
 
         bool isToken0 = _tokenIn == address(token0);
         (IERC20 tokenIn, IERC20 tokenOut, uint reserveIn, uint reserveOut) = isToken0
             ? (token0, token1, reserve0, reserve1)
             : (token1, token0, reserve1, reserve0);
 
-        tokenIn.transferFrom(msg.sender, address(this), uint256(amountIn));
+        tokenIn.transferFrom(msg.sender, address(this), amountIn);
 
-        uint amountInWithFee = (uint256(amountIn) * 997) / 1000;
+        uint256 amountInWithFee = (amountIn * 997) / 1000;
         amountOut = (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
 
-        tokenOut.transfer(msg.sender, uint256(amountOut));
+        tokenOut.transfer(msg.sender, amountOut);
 
         _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
     }
@@ -75,23 +77,24 @@ contract Pair {
 
         euint32 x = FHE.asEuint32(_amount0);
         euint32 y = FHE.asEuint32(_amount1);
-        uint32 amount0 = FHE.decrypt(x);
-        uint32 amount1 = FHE.decrypt(y);
+
+        uint256 amount0 = FHE.decrypt(x);
+        uint256 amount1 = FHE.decrypt(y);
         
-        bool t = token0.transferFrom(msg.sender, address(this), uint256(amount0));
-        bool tt = token1.transferFrom(msg.sender, address(this), uint256(amount1));
+        bool t = token0.transferFrom(msg.sender, address(this), amount0);
+        bool tt = token1.transferFrom(msg.sender, address(this), amount1);
         require(t && tt);
 
         if (reserve0 > 0 || reserve1 > 0) {
-            require(reserve0 * uint256(amount1) == reserve1 * uint256(amount0), "x / y != dx / dy");
+            require(reserve0 * amount1 == reserve1 * amount0, "x / y != dx / dy");
         }
 
         if (totalSupply == 0) {
-            shares = _sqrt(uint256(amount0) * uint256(amount1));
+            shares = _sqrt(amount0 * amount1);
         } else {
             shares = _min(
-                (uint256(amount0) * totalSupply) / reserve0,
-                (uint256(amount1) * totalSupply) / reserve1
+                (amount0 * totalSupply) / reserve0,
+                (amount1 * totalSupply) / reserve1
             );
         }
         require(shares > 0, "shares = 0");
@@ -106,19 +109,20 @@ contract Pair {
         
         euint32 x = FHE.asEuint32(_shares);
 
-        uint32 shares = FHE.decrypt(x);
+        uint256 shares = FHE.decrypt(x);
+
         uint bal0 = token0.balanceOf(address(this));
         uint bal1 = token1.balanceOf(address(this));
 
-        amount0 = (uint256(shares) * bal0) / totalSupply;
-        amount1 = (uint256(shares) * bal1) / totalSupply;
+        amount0 = (shares * bal0) / totalSupply;
+        amount1 = (shares * bal1) / totalSupply;
         require(amount0 > 0 && amount1 > 0, "amount0 or amount1 = 0");
 
         _burn(msg.sender, shares);
         _update(bal0 - amount0, bal1 - amount1);
 
-        token0.transfer(msg.sender, uint256(amount0));
-        token1.transfer(msg.sender, uint256(amount1));
+        token0.transfer(msg.sender, amount0);
+        token1.transfer(msg.sender, amount1);
     }
 
     function _sqrt(uint y) private pure returns (uint z) {

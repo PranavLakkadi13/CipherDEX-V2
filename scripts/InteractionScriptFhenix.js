@@ -3,16 +3,16 @@ const { Instance} = require("./FhenixInstance");
 const { ethers } = require("hardhat");
 const { FhenixTestnet } = require("../helper-hardhat-config");
 
-const provider =  ethers.provider;
-let CPAMMInstance;
+// const provider =  ethers.provider;
+// let CPAMMInstance;
 
 async function interactionFhenix() {
 
     const accounts = await ethers.getSigners();
     const signer = accounts[0];
 
-    const MockBTC =  await ethers.getContractAt("MockBTC","0x369B5466d3797f808b7b5C033d5175CdBcD8E9F0",signer);
-    const MockETH =  await ethers.getContractAt("MockETH","0x9f7c110794c259088Eaa22B608b508f968E0c6b7",signer);
+    const MockBTC =  await ethers.getContractAt("MockBTC","0xc5d64d0827FD96085D29ca3ffa479Fe6dcc33bDe",signer);
+    const MockETH =  await ethers.getContractAt("MockETH","0x1110e7A8f12ae93Eb4D6c8D18AE57F1CB725895B",signer);
     const Factory =  await ethers.getContractAt("FactoryFHE","0xA8F1F3Cab3286F8BfD9223E0081E80e2c2375993",signer);
     const MockFHE =  await ethers.getContractAt("MockFHE","0x28b2665b61168A6F16F458C2F014c9a16b7c46A0",signer);
 
@@ -28,17 +28,17 @@ async function interactionFhenix() {
     // await Factory.createPair(MockETH.address,MockBTC.address); 
 
     // const pair = await Factory.getPair(MockETH.address,MockFHE.address);
-    const pair = "0xa7423469945955403F82232c41e6665DA3cCa8Ee"
+    const pair = "0xBEe7dC353c3133c3421E498E8b79c5FE799d04A1"
 
     console.log(`The pair address that is created ${pair}`);
 
-    CPAMMInstance = await Instance(pair);
+    const CPAMMInstance = await Instance();
 
     // const permit = await getPermit(contractAddress, provider);
     // CPAMMInstance.storePermit(permit);
     // const permission = CPAMMInstance.extractPermitPermission(permit);
 
-    const CPAMM = await ethers.getContractAt("COnstantProduct",pair,signer);
+    const CPAMM = await ethers.getContractAt("Pair",pair,signer);
     
     // CPAMM.initialize(MockBTC.address,MockETH.address);
     
@@ -68,7 +68,7 @@ async function interactionFhenix() {
 
     console.log("The value has been encrypted!!");
 
-    await CPAMM.connect(accounts[0]).addLiquidity(resultUint32,resultUint32);
+    await CPAMM.connect(signer).addLiquidity(resultUint32,resultUint32);
     // await x1.wait(2); 
 
     const supplyafterLiquidityAdded = await CPAMM.totalSupply();

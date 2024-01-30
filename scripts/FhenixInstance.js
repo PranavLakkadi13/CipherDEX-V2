@@ -2,7 +2,7 @@ const { FhenixClient } = require("fhenixjs");
 const { ethers } = require("hardhat");
 
 let instance;
-let permission;
+// let permission;
 
 async function Instance() {
 

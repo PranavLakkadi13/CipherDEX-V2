@@ -64,3 +64,7 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+
+Local FHENIX : ```docker run -it -p 8545:8545 -p 6000:6000 \
+  --name localfhenix ghcr.io/fhenixprotocol/fhenix-devnet:0.1.5```

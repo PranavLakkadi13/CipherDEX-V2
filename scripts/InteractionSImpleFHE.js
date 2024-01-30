@@ -11,7 +11,7 @@ async function interaction() {
     const accounts = await ethers.getSigners();
     const signer = accounts[0];
 
-    const Simple = await ethers.getContractAt("SimpleFHE","0x7a73d48557e3f3Ac6Eda0Ad078ebfE8421db7d8C",signer);
+    const Simple = await ethers.getContractAt("SimpleFHE","0x4545EC7D366F62439b3AebE1ec80863c0Ab070Ed",signer);
 
     SimpleInstance = await Instance();
 
@@ -19,13 +19,21 @@ async function interaction() {
 
     console.log("The initial value is : ", InitialValue.toString());
 
-    const UpdatedValue = await SimpleInstance.encrypt_uint32(22);
+    const UpdatedValue = await SimpleInstance.encrypt_uint32(2992);
 
     const sendUpdatedValue = await Simple.changeValue(UpdatedValue);
 
     const AfterUpdatedValue = await Simple.x();
 
-    console.log("The updated value : " , AfterUpdatedValue);
+    console.log("The updated value : " , AfterUpdatedValue.toString());
+
+    const x = await SimpleInstance.encrypt_uint32(2232);
+
+    await Simple.changeValue(x);
+
+    const AfterUpdatedValue2 = await Simple.x();
+
+    console.log("The updated value : " , AfterUpdatedValue2.toString());
 }
 
 interaction()
