@@ -3,12 +3,11 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "@fhenixprotocol/contracts/FHE.sol";
-import "@fhenixprotocol/contracts/access/Permissioned.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {FHE, euint32, inEuint8} from "@fhenixprotocol/contracts/FHE.sol";
 
 
-contract CPAMM is Permissioned {
+contract CPAMM {
     IERC20 public immutable token0;
     IERC20 public immutable token1;
 
@@ -39,7 +38,7 @@ contract CPAMM is Permissioned {
     }
 
     function swap(address _tokenIn, inEuint32 calldata _amountIn) external returns (uint amountOut) {
-        uint32 amountIn = FHE.decrypt(FHE.asEuint32(_amountIn));
+        uint256 amountIn = FHE.decrypt(FHE.asEuint32(_amountIn));
         require(
             _tokenIn == address(token0) || _tokenIn == address(token1),
             "invalid token"
@@ -74,8 +73,8 @@ contract CPAMM is Permissioned {
     }
 
     function addLiquidity(inEuint32 calldata _amount0,inEuint32 calldata _amount1) external returns (uint shares) {
-        uint32 amount0 = FHE.decrypt(FHE.asEuint32(_amount0));
-        uint32 amount1 = FHE.decrypt(FHE.asEuint32(_amount1));
+        uint256 amount0 = FHE.decrypt(FHE.asEuint32(_amount0));
+        uint256 amount1 = FHE.decrypt(FHE.asEuint32(_amount1));
         
         token0.transferFrom(msg.sender, address(this), amount0);
         token1.transferFrom(msg.sender, address(this), amount1);
@@ -152,12 +151,12 @@ contract CPAMM is Permissioned {
         if (totalSupply == 0) {
             shares = _sqrt(amount0 * amount1);
         } else {
-            shares = _min(
-                (amount0 * totalSupply) / reserve0,
-                (amount1 * totalSupply) / reserve1
-            );
+            uint256 z = uint256(amount0) * totalSupply / reserve0;
+            uint256 a = uint256(amount1) * totalSupply / reserve1;
+            shares = _min(z,a);
         }
         require(shares > 0, "shares = 0");
+        
         _mint(msg.sender, shares);
 
         _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
@@ -202,7 +201,7 @@ contract CPAMM is Permissioned {
 
         // bal0 >= reserve0
         // bal1 >= reserve1
-        uint32 shares = FHE.decrypt(FHE.asEuint32(_shares));
+        uint256 shares = FHE.decrypt(FHE.asEuint32(_shares));
         uint bal0 = token0.balanceOf(address(this));
         uint bal1 = token1.balanceOf(address(this));
 

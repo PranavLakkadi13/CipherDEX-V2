@@ -11,8 +11,8 @@ async function interactionFhenix() {
     const accounts = await ethers.getSigners();
     const signer = accounts[0];
 
-    const MockBTC =  await ethers.getContractAt("MockBTC","0xc5d64d0827FD96085D29ca3ffa479Fe6dcc33bDe",signer);
-    const MockETH =  await ethers.getContractAt("MockETH","0x1110e7A8f12ae93Eb4D6c8D18AE57F1CB725895B",signer);
+    const MockBTC =  await ethers.getContractAt("MockBTC","0x2e1771fcEFFA28Fd49910AC8aAc647f01A86b58A",signer);
+    const MockETH =  await ethers.getContractAt("MockETH","0x6B1b2bed91137659E08e56d6CbC11DbF9e18bDaB",signer);
     const Factory =  await ethers.getContractAt("FactoryFHE","0xA8F1F3Cab3286F8BfD9223E0081E80e2c2375993",signer);
     const MockFHE =  await ethers.getContractAt("MockFHE","0x28b2665b61168A6F16F458C2F014c9a16b7c46A0",signer);
 
@@ -28,7 +28,7 @@ async function interactionFhenix() {
     // await Factory.createPair(MockETH.address,MockBTC.address); 
 
     // const pair = await Factory.getPair(MockETH.address,MockFHE.address);
-    const pair = "0xBEe7dC353c3133c3421E498E8b79c5FE799d04A1"
+    const pair = "0xC5F8b43D47FAa13FCd5f803153Ed28a7c58853F9"
 
     console.log(`The pair address that is created ${pair}`);
 
@@ -40,7 +40,7 @@ async function interactionFhenix() {
 
     const CPAMM = await ethers.getContractAt("Pair",pair,signer);
     
-    // CPAMM.initialize(MockBTC.address,MockETH.address);
+    await CPAMM.initialize(MockBTC.address,MockETH.address);
     
     const x = await CPAMM.totalSupply();
    
@@ -64,11 +64,13 @@ async function interactionFhenix() {
     const approveedETHValue = await MockETH.allowance(accounts[0].address,pair);
     console.log("The value approved in ETH is " + approveedETHValue.toString());
 
-    const resultUint32 = await CPAMMInstance.encrypt_uint32(5000);
+    const resultUint32 = await CPAMMInstance.encrypt_uint32(500)
 
     console.log("The value has been encrypted!!");
 
-    await CPAMM.connect(signer).addLiquidity(resultUint32,resultUint32);
+    const amount = await CPAMM.addLiquidity(resultUint32,resultUint32);
+
+    console.log("The amount of shares minted: ",amount.toString());
     // await x1.wait(2); 
 
     const supplyafterLiquidityAdded = await CPAMM.totalSupply();

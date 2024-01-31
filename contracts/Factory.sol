@@ -24,7 +24,7 @@ contract FactoryFHE {
         console.log("The address of token0 ", token0);
         require(token0 != address(0), 'ZERO_ADDRESS');
         require(getPair[token0][token1] == address(0), 'PAIR_EXISTS'); // single check is sufficient
-        bytes memory bytecode = type(Pair).creationCode;
+        bytes memory bytecode = type(EncryptedPair).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(token0, token1,msg.sender));
         assembly {
             pair := create2(0xff, add(bytecode, 32), mload(bytecode), salt)
@@ -33,7 +33,7 @@ contract FactoryFHE {
         if (pair == address(0)) {
             revert();
         }
-        Pair(pair).initialize(token0, token1);
+        EncryptedPair(pair).initialize(token0, token1);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);

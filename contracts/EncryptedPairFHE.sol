@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "@fhenixprotocol/contracts/FHE.sol";
 import "./interfaces/IERC20.sol";
 
-contract Pair {
+contract EncryptedPair {
 
     IERC20 public token0;
     IERC20 public token1;
@@ -92,10 +92,9 @@ contract Pair {
         if (totalSupply == 0) {
             shares = _sqrt(amount0 * amount1);
         } else {
-            shares = _min(
-                (amount0 * totalSupply) / reserve0,
-                (amount1 * totalSupply) / reserve1
-            );
+            uint256 z = uint256(amount0) * totalSupply / reserve0;
+            uint256 a = uint256(amount1) * totalSupply / reserve1;
+            shares = _min(z,a);
         }
         require(shares > 0, "shares = 0");
         _mint(msg.sender, shares);

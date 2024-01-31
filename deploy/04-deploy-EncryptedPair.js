@@ -6,9 +6,11 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const chainid = network.config.chainId;
     log("deploy to the chainId " + chainid);
 
+    const accounts = await ethers.getSigners();
+
     args = [];
 
-    const Pair = await deploy("PairZAMA", {
+    const Pair = await deploy("EncryptedPair", {
         args: args,
         from: deployer,
         log: true,

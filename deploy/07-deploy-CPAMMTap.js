@@ -12,7 +12,7 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     // args = [MockBTC.address,MockETH.address];
     const args = ["0x369B5466d3797f808b7b5C033d5175CdBcD8E9F0","0x9f7c110794c259088Eaa22B608b508f968E0c6b7"];
 
-    const CPAMM = await deploy("COnstantProduct", {
+    const CPAMM = await deploy("CPAMM", {
         args: args,
         from: deployer,
         log: true,

@@ -11,7 +11,7 @@ async function interaction() {
     const accounts = await ethers.getSigners();
     const signer = accounts[0];
 
-    const Simple = await ethers.getContractAt("SimpleFHE","0x4545EC7D366F62439b3AebE1ec80863c0Ab070Ed",signer);
+    const Simple = await ethers.getContractAt("SimpleFHE","0xd2f34FA1Eb1878257975376812c5151B7Cddfb10",signer);
 
     SimpleInstance = await Instance();
 

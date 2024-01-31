@@ -6,6 +6,10 @@ module.exports = async ({getNamedAccounts, deployments}) => {
     const chainid = network.config.chainId;
     log("deploy to the chainId " + chainid);
 
+    const MockBTC = await deployments.get("MockBTC");
+    const MockETH = await deployments.get("MockETH");
+    const accounts = await ethers.getSigners();
+
     args = [];
 
     const Pair = await deploy("Pair", {

@@ -8,7 +8,7 @@ contract SimpleFHE {
     uint256 public x;
 
     function changeValue(inEuint32 calldata _x) external {
-        euint32 y = FHE.asEuint32(_x);
-        x = x + FHE.decrypt(y);
+        uint32 y = FHE.decrypt(FHE.asEuint32(_x));
+        x = x + y;
     } 
 }

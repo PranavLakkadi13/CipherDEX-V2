@@ -1,162 +1,156 @@
 // SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.19;
+pragma solidity 0.8.19;
 
 import "@fhenixprotocol/contracts/FHE.sol";
-import {FHE, euint32, inEuint32} from "@fhenixprotocol/contracts/FHE.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+contract Pair {
+    IERC20 public token0;
+    IERC20 public token1;
+    address public immutable factory;
 
-contract COnstantProduct {
-    IERC20 public immutable token0;
-    IERC20 public immutable token1;
+    uint public reserve0;
+    uint public reserve1;
 
-    uint public reserve0; // internal balanceof token0
-    uint public reserve1; // internal balanceof token1 
+    uint public totalSupply;
+    mapping(address => uint) public balanceOf;
 
-    uint public totalSupply;  // to see the total supply of shares 
-    mapping(address => uint) public balanceOf;  // to map the shares of a specific address
+    constructor(){
+        factory = msg.sender;
+    }
 
-    constructor(address _token0, address _token1){
+    // function BalanceOf(bytes32 publicKey,bytes calldata signature) public view 
+    // onlySignedPublicKey(publicKey,signature)
+    // returns(bytes memory reencrypted) {
+    //     // return TFHE.reencrypt(balanceOf[msg.sender], publicKey, 0);
+    //     reencrypted = TFHE.reencrypt(balanceOf[msg.sender],publicKey,0);
+    // }
+
+    function initialize(address _token0, address _token1) external {
+        require(msg.sender == factory, 'FORBIDDEN'); // sufficient check
         token0 = IERC20(_token0);
         token1 = IERC20(_token1);
     }
 
-    function _mint(address _to,uint _amount) private { // to mint the shares 
+    function _mint(address _to, uint _amount) private {
         balanceOf[_to] += _amount;
         totalSupply += _amount;
     }
 
-    function _burn(address _from,uint _amount) private { // to burn the shares 
+    function _burn(address _from, uint _amount) private {
         balanceOf[_from] -= _amount;
         totalSupply -= _amount;
     }
 
-    function _update(uint _reserve0, uint _reserve1) private { // to update the reserves
+    function _update(uint _reserve0, uint _reserve1) private {
         reserve0 = _reserve0;
         reserve1 = _reserve1;
     }
 
-    function swap(address _tokenIn, inEuint32 calldata _amountIn) external returns(uint _amountOut){
-        // Pull in tokenIn
-        // calculate tokenOut, iuncluding fees, 0.3% fee
-        // transfer tokenOut to msg.sender
-        // update the reserves
-
+    function swap(address _tokenIn, inEuint32 memory _amountIn) external returns (uint amountOut) {
         euint32 x = FHE.asEuint32(_amountIn);
-        uint256 amountIn = FHE.decrypt(x);
+        uint32 amountIn = FHE.decrypt(x);
+        require(
+            _tokenIn == address(token0) || _tokenIn == address(token1),
+            "invalid token"
+        );
+        require(uint256(amountIn) > 0, "amount in = 0");
 
-        require(_tokenIn == address(token0) || _tokenIn == address(token1),"Invalid input token");
-        require(amountIn > 0, "Input amount too low");
+        bool isToken0 = _tokenIn == address(token0);
+        (IERC20 tokenIn, IERC20 tokenOut, uint reserveIn, uint reserveOut) = isToken0
+            ? (token0, token1, reserve0, reserve1)
+            : (token1, token0, reserve1, reserve0);
 
-        bool istoken0 = _tokenIn == address(token0);
+        tokenIn.transferFrom(msg.sender, address(this), uint256(amountIn));
 
-        (IERC20 _tokenIn, IERC20 _tokenOut, uint _reserveIn, uint _reserveOut) = istoken0 
-        ? (token0,token1,reserve0,reserve1) : (token1, token0,reserve1,reserve0); 
+        uint amountInWithFee = (uint256(amountIn) * 997) / 1000;
+        amountOut = (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
 
-        // transferring tokens in 
-        _tokenIn.transferFrom(msg.sender, address(this), amountIn);
-        
-        // calculating the amount of token to be given out (including fee)
-        // y*dx / (x + dx) = dy 
-        uint _amountOutWithFee = (amountIn * 997)/1000;
-        _amountOut = (_reserveOut * _amountOutWithFee)/(_reserveIn + _amountOutWithFee);
+        tokenOut.transfer(msg.sender, uint256(amountOut));
 
-        
-        // transferring token out 
-        _tokenOut.transfer(msg.sender,_amountOut);
-        
-        // updating the reserve 
-        _update(token0.balanceOf(address(this)),token1.balanceOf(address(this)));
-
+        _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
     }
 
-    // when someone add liquidity , shares mint
-    function addLiquidity(inEuint32 calldata _amount0, inEuint32 calldata _amount1) external returns(uint shares){ 
-        // pull in token 1 and token 2 
-        // mint the shares 
-        // update the reserves 
-
+    function addLiquidity(inEuint32 memory _amount0, inEuint32 memory _amount1) external returns (uint shares) {
         euint32 x = FHE.asEuint32(_amount0);
         euint32 y = FHE.asEuint32(_amount1);
         uint32 amount0 = FHE.decrypt(x);
         uint32 amount1 = FHE.decrypt(y);
         
-        // pull in tokens 
-        token0.transferFrom(msg.sender,address(this),amount0);
-        token1.transferFrom(msg.sender,address(this),amount1);
+        token0.transferFrom(msg.sender, address(this), uint256(amount0));
+        token1.transferFrom(msg.sender, address(this), uint256(amount1));
 
-        // dy/dx = y/x the ratio of tokens coming in == ration of the reserves of the tokens
-        if (reserve0 >0 || reserve1 > 0) {
-            require(reserve0 * amount1 == reserve1 * amount0, "dy/dx != y/x");
+        if (reserve0 > 0 || reserve1 > 0) {
+            require(reserve0 * uint(amount1) == reserve1 * uint(amount0), "x / y != dx / dy");
         }
 
-        // mint Shares 
-        // f(x,y) = value of liquidity = sqrt(x*y)
-        // shares (s) = (dx/x)T = (dy/y)T
         if (totalSupply == 0) {
-            shares = _sqrt(amount0 * amount1);
+            shares = _sqrt(uint256(amount0) * uint256(amount1));
+        } else {
+            uint256 z = uint256(amount0) * totalSupply / reserve0;
+            uint256 a = uint256(amount1) * totalSupply / reserve1;
+            shares = _min(z , a);
         }
-        else {
-            shares  = _min((amount0 * totalSupply)/reserve0, (amount1 * totalSupply)/reserve1);
-        }
+        require(shares > 0, "shares = 0");
+        _mint(msg.sender, shares);
 
-        require(shares > 0, "error shares < 0");
-        // mint the shares
-        _mint(msg.sender,shares); 
-
-        // update the reserves
-        _update(token0.balanceOf(address(this)),token1.balanceOf(address(this)));
+        _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
     }
-    
-    // when someone removes liquidity , shares burn and collect the fees
-    function removerLiquidity(uint _shares) external returns(uint amount0,uint amount1){ 
-        // first calculate amount0 and amount1 to withdraw 
-        // dx = s / T * x
-        // dy = s / T * y
 
-        // euint32 x = FHE.asEuint32(_shares);
+    function removeLiquidity(
+        inEuint32 memory _shares
+    ) external returns (uint amount0, uint amount1) {
+        euint32 x = FHE.asEuint32(_shares);
 
-        // uint32 shares = FHE.decrypt(x);
-
+        uint32 shares = FHE.decrypt(x);
         uint bal0 = token0.balanceOf(address(this));
         uint bal1 = token1.balanceOf(address(this));
 
-        amount0 = (_shares * bal0) / totalSupply;
-        amount1 = (_shares * bal1) / totalSupply;
-        require(amount0 > 0 && amount1 > 0, "amount0 or amount1 is < 0");
+        amount0 = (uint256(shares) * bal0) / totalSupply;
+        amount1 = (uint256(shares) * bal1) / totalSupply;
+        require(amount0 > 0 && amount1 > 0, "amount0 or amount1 = 0");
 
-        // burn the shares 
-        _burn(msg.sender, _shares);
-
-        // update the reserves 
+        _burn(msg.sender, shares);
         _update(bal0 - amount0, bal1 - amount1);
 
-        // transfer the tokens to msg.sender 
-        token0.transfer(msg.sender, amount0);
-        token1.transfer(msg.sender, amount1);
-
-
+        token0.transfer(msg.sender, uint256(amount0));
+        token1.transfer(msg.sender, uint256(amount1));
     }
 
-    // to get the liquidity
-    function _sqrt(uint y) private pure returns(uint z) {  
+    function _sqrt(uint y) private pure returns (uint z) {
         if (y > 3) {
             z = y;
-            uint x = y/2 + 1;
-            while(x < z){
+            uint x = y / 2 + 1;
+            while (x < z) {
                 z = x;
                 x = (y / x + x) / 2;
             }
-        }
-        else if (y != 0) {
+        } else if (y != 0) {
             z = 1;
         }
     }
 
-    // to get the minimum of 2 numbers
-    function _min(uint x, uint y) private pure returns(uint) { 
-        return (x <= y) ? x : y;
+    function _min(uint x, uint y) private pure returns (uint) {
+        return x <= y ? x : y;
     }
+}
 
+interface IERC20 {
+    function totalSupply() external view returns (uint);
+
+    function balanceOf(address account) external view returns (uint);
+
+    function transfer(address recipient, uint amount) external returns (bool);
+
+    function allowance(address owner, address spender) external view returns (uint);
+
+    function approve(address spender, uint amount) external returns (bool);
+
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint amount
+    ) external returns (bool);
+
+    event Transfer(address indexed from, address indexed to, uint amount);
+    event Approval(address indexed owner, address indexed spender, uint amount);
 }
