@@ -36,12 +36,14 @@ module.exports = {
       accounts: [Private_Key],
       chainId: 11155111,
       blockConfirmations: 6,
+      timeout: 100000,
     },
     polygon: {
       url: RPC_URL_POLYGON,
       accounts: [Private_Key],
       chainId: 80001,
       blockConfirmations: 6,
+      timeout: 100000,
     },
     localzama: {
       // pubkey2 : 0x1D6B3f840358d958C8db24717C3edB914616E871
@@ -50,6 +52,7 @@ module.exports = {
       // accounts: { ZAMAMNEMONIC },
       chainid: 9000,
       url: "http://127.0.0.1:8545",
+      timeout: 100000,
     },
     localfhenix: {
       // pubkey1 : 0x0319069ca5e383e40d6d19fb3e76e8b22b91cf4b0df661850c8e1de01624ab1d10
@@ -57,16 +60,19 @@ module.exports = {
       // accounts:{ mnemonic : Mnemonic},
       chainId: 5432,
       url: "http://localhost:8545",
+      timeout: 100000,
     },
     fhenix: {
       url: "https://test01.fhenix.zone/evm",
       chainId: 412346,
-      accounts: [Private_Key]
+      accounts: [Private_Key],
+      timeout: 100000,
     },
     zama: {
       accounts: [Private_Key],
       chainId: 8009,
       url: "https://devnet.zama.ai",
+      timeout: 100000,
     }
   },
   solidity: {
