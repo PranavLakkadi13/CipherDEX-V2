@@ -4,9 +4,9 @@ async function deployPair() {
     const accounts = await ethers.getSigners();
     const contractOwner = accounts[0];
 
-    const contractFactory = await ethers.deployContract("Pair",contractOwner);
-    // const contract = await contractFactory.deploy(); 
-    const address = await contract.getAddress();
+    const contractFactory = await ethers.getContractFactory("Pair",contractOwner)
+    const contract = await contractFactory.deploy(); 
+    const address = await contract.address;
 
     console.log("Contract has been deployed!!!")
 

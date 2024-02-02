@@ -2,6 +2,8 @@
 pragma solidity 0.8.19;
 
 import "@fhenixprotocol/contracts/FHE.sol";
+import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Pair {
     IERC20 public token0;
@@ -70,30 +72,34 @@ contract Pair {
         _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
     }
 
-    function addLiquidity(inEuint32 memory _amount0, inEuint32 memory _amount1) external returns (uint shares) {
-        euint32 x = FHE.asEuint32(_amount0);
-        euint32 y = FHE.asEuint32(_amount1);
-        uint32 amount0 = FHE.decrypt(x);
-        uint32 amount1 = FHE.decrypt(y);
+    function addLiquidity(inEuint32 calldata _amount0, inEuint32 calldata _amount1) external returns (uint ) {
+        // euint32 x = FHE.asEuint32(_amount0);
+        // euint32 y = FHE.asEuint32(_amount1);
+        uint32 amount0 = FHE.decrypt(FHE.asEuint32(_amount0));
+        uint32 amount1 = FHE.decrypt(FHE.asEuint32(_amount1));
+
+        require(amount0 > 0 && amount1 > 0, "0 amount not allowed");
         
-        token0.transferFrom(msg.sender, address(this), uint256(amount0));
-        token1.transferFrom(msg.sender, address(this), uint256(amount1));
+        token0.transferFrom(msg.sender, address(this), amount0);
+        token1.transferFrom(msg.sender, address(this), amount1);
 
-        if (reserve0 > 0 || reserve1 > 0) {
-            require(reserve0 * uint(amount1) == reserve1 * uint(amount0), "x / y != dx / dy");
-        }
+        return uint32(amount0);
 
-        if (totalSupply == 0) {
-            shares = _sqrt(uint256(amount0) * uint256(amount1));
-        } else {
-            uint256 z = uint256(amount0) * totalSupply / reserve0;
-            uint256 a = uint256(amount1) * totalSupply / reserve1;
-            shares = _min(z , a);
-        }
-        require(shares > 0, "shares = 0");
-        _mint(msg.sender, shares);
+        // if (reserve0 > 0 || reserve1 > 0) {
+        //     require(reserve0 * uint(amount1) == reserve1 * uint(amount0), "x / y != dx / dy");
+        // }
 
-        _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
+        // if (totalSupply == 0) {
+        //     shares = _sqrt(uint256(amount0) * uint256(amount1));
+        // } else {
+        //     uint256 z = uint256(amount0) * totalSupply / reserve0;
+        //     uint256 a = uint256(amount1) * totalSupply / reserve1;
+        //     shares = _min(z , a);
+        // }
+        // require(shares > 0, "shares = 0");
+        // _mint(msg.sender, shares);
+
+        // _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
     }
 
     function removeLiquidity(
@@ -134,23 +140,23 @@ contract Pair {
     }
 }
 
-interface IERC20 {
-    function totalSupply() external view returns (uint);
+// interface IERC20 {
+//     function totalSupply() external view returns (uint);
 
-    function balanceOf(address account) external view returns (uint);
+//     function balanceOf(address account) external view returns (uint);
 
-    function transfer(address recipient, uint amount) external returns (bool);
+//     function transfer(address recipient, uint amount) external returns (bool);
 
-    function allowance(address owner, address spender) external view returns (uint);
+//     function allowance(address owner, address spender) external view returns (uint);
 
-    function approve(address spender, uint amount) external returns (bool);
+//     function approve(address spender, uint amount) external returns (bool);
 
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint amount
-    ) external returns (bool);
+//     function transferFrom(
+//         address sender,
+//         address recipient,
+//         uint amount
+//     ) external returns (bool);
 
-    event Transfer(address indexed from, address indexed to, uint amount);
-    event Approval(address indexed owner, address indexed spender, uint amount);
-}
+//     event Transfer(address indexed from, address indexed to, uint amount);
+//     event Approval(address indexed owner, address indexed spender, uint amount);
+// }
