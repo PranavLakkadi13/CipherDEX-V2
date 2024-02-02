@@ -67,7 +67,7 @@ describe("Pair", () => {
             // assert.equal(bal.toString(),1000)
             console.log("balance of the contract ", bal.toString());
 
-            const SenderBalanceAfter = await mockBTC.balanceOf(signer.address);
+            const SenderBalanceAfter = await mockBTC.balanceOf(accounts[0].address);
             console.log("The balance of owner before liquidity added : ", SenderBalanceAfter);
         });
     })
